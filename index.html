@@ -1345,6 +1345,11 @@
         <i class="fas fa-bullseye fa-lg"></i>
         
         </div>
+        <div id="map-toggle-btn" class="left-sidebar-btn">
+        <div class="left-sidebar-btn-label">Map</div>
+        <i class="far fa-map fa-lg"></i>
+        
+        </div>
       </div>
     </div>
 
@@ -1764,11 +1769,13 @@
                             "Startup Name": w["Startup Name"],
                             Funding: w["Funding amount ($)"],
                             Website: w["Website"],
-                            'Year Founded': w["Founded"]
+                            Year: +w["Founded"],
+                            Maturity: w["Maturity"]
                           };
                           bar_data.push(obj);
                     }
                 })
+                console.log('bar_data', bar_data)
                 update_bar("Amount of Funding")
 
               }
@@ -4081,9 +4088,9 @@
 
                 }
 
-                                if (type === "Maturity") {
+                  if (type === "Maturity") {
                   var maturityOrder = [
-                  "Existing", "Emerging", "Distant"]
+                  "Mature", "Emerging", "Nascent"]
                   function maturitySort(a, b) {
                     
                     for (i = 0; i < maturityOrder.length; i++) {
@@ -4110,6 +4117,8 @@
                   }) )
                   
 
+                  console.log('maturity_data', maturity_data)
+
                   var maxVal = d3.max(maturity_data, function(d) {
                     return d.value.startups
                 })
@@ -4131,6 +4140,9 @@
                 var maxTicks = maxVal
                 if (maxVal > 30) {
                   maxTicks = maxVal / 2
+                  if (maxVal > 60) {
+                    maxTicks = maxVal / 4
+                  }
                 }
 
                 barSVG.append("g")
