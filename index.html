@@ -3011,7 +3011,7 @@
               for (i = 0; i < chartPieData.length; i++) {
                 if (d["Primary SDG"] === chartPieData[i].data.value.key) {
                   var tmp_startAngleMin = chartPieData[i].startAngle
-                  var tmp_endAngleMax = chartPieData[i].endAngle
+                  var tmp_endAngleMax = chartPieData[i].endAngle-0.05
                   break;
                 }
               }
@@ -3035,7 +3035,7 @@
                           radiusSize,
                           nodeSecondData[i].values[j].value
                         )
-                        if (congestion > 20) {
+                        if (congestion > 10) {
                            d.resultsYear = assignRandom(
                             tmp_startAngleMin,
                             tmp_endAngleMax,
