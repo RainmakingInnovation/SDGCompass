@@ -1382,6 +1382,12 @@
     <div id="control-container">
       <div>
           <div>    
+
+            <div class="button b2" id="button-16">
+              <input type="checkbox" class="checkbox" />
+              <div class="knobs"></div>
+              <div class="layer"></div>
+            </div>
             <div>
 
           <div id="save-button-container">
@@ -2249,13 +2255,13 @@
                 .data(chartPieData)
                 .enter()
                 .append("path")
-                .attr("class", "segment " + "year-" + v.key + "-segments")
+                .attr("class", "segment " + "year-" + v.key.replace(/:/g, "") + "-segments")
                 .attr("id", function(d) {
                   return (
                     "year-" +
-                    v.key +
+                    v.key.replace(/:/g, "") +
                     "-" +
-                    d.data.value.key.replace(/ /g, "-").replace(/&/g, "and") +
+                    d.data.value.key.replace(/ /g, "-").replace(/&/g, "and").replace(/:/g, "") +
                     "-segment"
                   );
                 })
@@ -4246,18 +4252,18 @@
                   d.fn
                     .append("text")
                     .attr("class", "year-label-text")
-                    .attr("id", "year-" + d.key + "-label-path-text")
+                    .attr("id", "year-" + d.key.replace(/:/g, "") + "-label-path-text")
                     .append("textPath")
-                    .attr("xlink:href", "#year-" + d.key + "-label-path")
+                    .attr("xlink:href", "#year-" + d.key.replace(/:/g, "") + "-label-path")
                     .attr("startOffset", "50%")
                     .text(d.key);
   
                   chartPieData.forEach(function(v) {
                     d3.select(
                       "#year-" +
-                        d.key +
+                        d.key.replace(/:/g, "") +
                         "-" +
-                        v.data.value.key.replace(/ /g, "-").replace(/&/g, "and") +
+                        v.data.value.key.replace(/ /g, "-").replace(/&/g, "and").replace(/:/g, "") +
                         "-segment"
                     ).attr("opacity", 1);
                   });
@@ -4318,9 +4324,9 @@
                   chartPieData.forEach(function(v) {
                     d3.select(
                       "#year-" +
-                        d.key +
+                        d.key.replace(/:/g, "") +
                         "-" +
-                        v.data.value.key.replace(/ /g, "-").replace(/&/g, "and") +
+                        v.data.value.key.replace(/ /g, "-").replace(/&/g, "and").replace(/:/g, "") +
                         "-segment"
                     ).attr("opacity", 0);
                   });
