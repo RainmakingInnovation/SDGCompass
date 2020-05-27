@@ -1685,12 +1685,6 @@
                 }
               })*/
 
-            
-            var filteredCountries = ["England", "Ireland", "Singapore", "USA"]
-            data = data.filter(function(d) {
-              return filteredCountries.indexOf(d["Country"]) < 0
-            })
-
             data = data.filter(function(d) {
               return d["Primary SDG"] !== "" && d["Primary SDG"] !== "x";
             });
@@ -2747,7 +2741,7 @@
               })
               .map(function(v) {
                 return v.key
-              }).slice(0,12)
+              })
 
               var focusAreaSort = focusAreaOrder
 
