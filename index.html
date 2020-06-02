@@ -593,7 +593,7 @@
 
       .city-circle,
       .country-circle {
-        fill-opacity: 0.3;
+        fill-opacity: 0.5;
         stroke-width: 3px;
       }
 
@@ -1175,11 +1175,23 @@
     padding-bottom: 5px;
   }
 
-
-
   .bold {
     font-family: "Graphik Bold";
     padding-top: 5px;
+  }
+
+  .map-legend {
+    position: fixed;
+    width: 30px;
+    left: 156px;
+    z-index: 10000;
+    border: 2px solid #DCDCDC;
+  }
+
+  .legend {
+    height: 40px;
+    background-color: black;
+    opacity: 0.5;
   }
 
     </style>
@@ -1381,6 +1393,11 @@
       </div>
   <div class="map-tooltip"></div>
   <div class="bg"></div>
+  <div class="map-legend">
+    <div class="legend legend-0"></div>
+    <div class="legend legend-1"></div>
+    <div class="legend legend-2"></div>
+  </div>
   <div id="map"></div>
 
 </div>
@@ -1865,7 +1882,7 @@
                     if (v.properties.name === d.properties.name) {
                       return "#247DC5"
                     } else {
-                      return "#7DCCFF"
+                      return v.properties.color
                     }
                     
                   })
@@ -1873,7 +1890,7 @@
                     if (v.properties.name === d.properties.name) {
                       return "#247DC5"
                     } else {
-                      return "#7DCCFF"
+                      return v.properties.color
                     }
                   });
  
@@ -2277,7 +2294,7 @@
                           })
                           .attr("x", 0)
                           .attr("y", 0)
-                          .attr("fill", "#FFFD82")
+                          .attr("fill", "#FFFED6")
                           .attr("transform", function(d) {
                             if (radial === "maturity") {
                               var x = d.x;
@@ -2544,8 +2561,16 @@
   
   
               var countryCircleScale = d3.scaleSqrt()
-              .domain([1,max_country])
-              .range([2.6, 30]);
+                .domain([1,max_country])
+                .range([2.6, 30]);
+
+              var countryColorScale = d3.scaleSequential(d3["interpolateCool"])
+                .domain([max_country,1])
+
+              d3.select(".map-legend").style("top", (window.innerHeight - 130) + "px")
+                d3.select(".legend-2").style("background-color", countryColorScale(1))
+                d3.select(".legend-1").style("background-color", countryColorScale(max_country/2))
+                d3.select(".legend-0").style("background-color", countryColorScale(max_country))
   
  
               json.features = json.features.filter(function(d) {
@@ -2593,6 +2618,8 @@
                 }, 2000);
                 });*/
 
+
+
                 mapG
                 .selectAll(".country-circle")
                 .data(json.features)
@@ -2622,8 +2649,15 @@
                   if (arr != [0,0]) {
                     return map.latLngToLayerPoint(new L.LatLng(center(arr)[1], center(arr)[0])).y
                 }})
-                .attr("fill", "#7DCCFF")
-                .attr("stroke", "#7DCCFF")
+                .attr("fill", function(d) {
+                  if (d.properties.startups > 0) {
+                     d.properties.color = countryColorScale(d.properties.startups);
+                     return d.properties.color
+                  }
+                })
+                .attr("stroke", function(d) {
+                  return d.properties.color
+                })
                 .style("cursor", "pointer")
                 .on("mouseover", function(d) {
                   country_hover(d)
@@ -2859,7 +2893,7 @@
               .domain(fundingCategoryDomain)
               .range(fundingCategoryRange);
   
-            var colors = ["#D75059", "#01AAFF", "#388659"];
+            var colors = ["#E89BA0", "#99DDFF", "#A9DBBE"];
   
             var nodeColorScale = d3
               .scaleOrdinal()
@@ -3526,7 +3560,7 @@
               .classed("key-item-other", true)
               .attr("width", 8.8)
               .attr("height", 8.8)
-              .attr("fill", "#FFFD82")
+              .attr("fill", "#FFFED6")
               .attr("x", -4)
               .attr("y", 3)
               .attr("transform", "translate(0, -7) rotate(45)")
@@ -4248,7 +4282,7 @@
               })
               .attr("x", 0)
               .attr("y", 0)
-              .attr("fill", "#FFFD82")
+              .attr("fill", "#FFFED6")
               .attr("transform", function(d) {
                 return "translate(" + d.yearX + "," + d.yearY + ")    rotate(45)";
               })
@@ -6144,7 +6178,7 @@
                     })
                     .attr("x", 0)
                     .attr("y", 0)
-                    .attr("fill", "#FFFD82")
+                    .attr("fill", "#FFFED6")
                     .attr("transform", function(d) {
                       if (radial === "maturity") {
                         var x = d.x;
