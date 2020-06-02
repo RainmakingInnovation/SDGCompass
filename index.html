@@ -1697,7 +1697,6 @@
               var colorScale = d3.scaleOrdinal()
                 .domain(focusAreaOrder)
                 .range(colorList)
-                console.log('data', data)
 
               data = data.filter(function(d) {
                 return d["Complete"] === "TRUE"
@@ -2056,7 +2055,7 @@
                               })
                               .style("stroke", "white")
                               .style("stroke-width", "2px")
-                              .attr("fill", "#DFDFDF") //F4F4F4
+                              .attr("fill", "#F4F4F4") //F4F4F4
                               .attr("d", nascentArc);
           
                             var tmp_emergingSegments = tmp_chartSVG
@@ -2102,7 +2101,7 @@
                               })
                               .style("stroke", "white")
                               .style("stroke-width", "2px")
-                              .attr("fill", "#F4F4F4") //DFDFDF
+                              .attr("fill", "#DFDFDF") //DFDFDF
                               .attr("d", matureArc);
                           } else {  
                             count_by_year.forEach(function(w) {
@@ -2303,7 +2302,7 @@
                               var x = d.yearX;
                               var y = d.yearY;
                             }
-                            return "translate(" + x + "," + y + ")    rotate(45)";
+                            return "translate(" + x + "," + y + ") rotate(45)";
                           })
                           .attr("opacity", function(d) {
                             if (
@@ -2801,8 +2800,6 @@
               })
               .entries(data)
               .sort(function(a, b) {
-                console.log('a.key', a.key)
-                console.log('a.key.slice(4,6)', a.key.slice(4,6).replace(/:/g,""))
                 return d3.ascending(+a.key.slice(4,6).replace(/:/g,""), +b.key.slice(4,6).replace(/:/g,""))
               })
               .map(function(v) {
@@ -3041,9 +3038,9 @@
               } */
   
             var maturity_list = [
-              { name: "Nascent", inner: 50, outer: 180 },
-              { name: "Emerging", inner: 180, outer: 240 },
-              { name: "Mature", inner: 240, outer: 300 }
+              { name: "Mature", inner: 50, outer: 110 },
+              { name: "Emerging", inner: 110, outer: 170 },
+              { name: "Nascent", inner: 170, outer: 300 }
             ];
   
             var backgroundArc = d3
@@ -3053,8 +3050,8 @@
   
             var nascentArc = d3
               .arc()
-              .innerRadius(maturity_list[0].inner)
-              .outerRadius(maturity_list[0].outer);
+              .innerRadius(maturity_list[2].inner)
+              .outerRadius(maturity_list[2].outer);
   
             var emergingArc = d3
               .arc()
@@ -3063,8 +3060,8 @@
   
             var matureArc = d3
               .arc()
-              .innerRadius(maturity_list[2].inner)
-              .outerRadius(maturity_list[2].outer);
+              .innerRadius(maturity_list[1].inner)
+              .outerRadius(maturity_list[1].outer);
   
             var themeArc = d3
               .arc()
@@ -3777,9 +3774,9 @@
                 .text("Maturity")
                 .attr("fill", "white"); */
   
-            var nascentLabelRadius = maturity_list[0].outer - 15;
+            var nascentLabelRadius = maturity_list[2].outer - 15;
             var emergingLabelRadius = maturity_list[1].outer - 15;
-            var matureLabelRadius = maturity_list[2].outer - 15;
+            var matureLabelRadius = maturity_list[0].outer - 15;
   
             var nascentLabel = chartSVG
               .append("g")
@@ -5161,7 +5158,7 @@
 
                   if (type === "Maturity") {
                   var maturityOrder = [
-                  "Nascent", "Emerging", "Mature"]
+                  "Mature", "Emerging" ,"Nascent"]
                   function maturitySort(a, b) {
                     
                     for (i = 0; i < maturityOrder.length; i++) {
@@ -5954,7 +5951,7 @@
                       })
                       .style("stroke", "white")
                       .style("stroke-width", "2px")
-                      .attr("fill", "#DFDFDF") //F4F4F4
+                      .attr("fill", "#F4F4F4") //F4F4F4
                       .attr("d", nascentArc);
   
                     var tmp_emergingSegments = tmp_chartSVG
@@ -6000,7 +5997,7 @@
                       })
                       .style("stroke", "white")
                       .style("stroke-width", "2px")
-                      .attr("fill", "#F4F4F4") //DFDFDF
+                      .attr("fill", "#DFDFDF") //DFDFDF
                       .attr("d", matureArc);
                   } else {
                     count_by_year.forEach(function(v) {
