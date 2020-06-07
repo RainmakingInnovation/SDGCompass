@@ -1150,29 +1150,44 @@
   }
 
   .opp-space-tooltip {
-    padding: 0.5em 1em;
     background: rgba(255, 255, 255, 1.0);
     text-align: left;
     text-anchor: start;
-    max-width: 400px;
+    width: 200px;
     font-size: 10px;
-    box-shadow: 0 4px 12px 0px rgba(0,0,0,.25);
+    border: 3px solid black;
   }
 
   .opp-space-tooltip-title {
     font-family: "Graphik Bold";
-    padding-top: 3px;
-    padding-bottom: 5px;
+    padding: 10px;
+    color: white;
+    border-bottom: 3px solid black;
+    margin-bottom: 10px;
+    height: 25px;
   }
 
   .opp-space-tooltip-sub-heading {
     font-family: "Graphik Regular";
     padding-bottom: 3px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   .opp-space-tooltip-item {
-    font-family: "Graphik Regular";
+    font-family: "Graphik Bold";
     padding-bottom: 5px;
+    margin-left: 10px;
+  }
+
+  #ostt-1,
+  #ostt-8,
+  #ostt-9 {
+    display: none;
+  }
+
+  #ostt-7 {
+    margin-bottom: 5px;
   }
 
   .bold {
@@ -1568,7 +1583,7 @@
           const svg_left = (d3.select("#chart-container").style("left"))
           d3.select("#key-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (window.innerHeight/2 - 60) + "px")
           d3.select("#control-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (window.innerHeight/2 + 80) + "px")
-          d3.select("#opp-space-tooltip-container").style("left", (+svg_left.slice(0,-2) + svg_width+160) + "px").style("top", (window.innerHeight/2-60) + "px")
+          d3.select("#opp-space-tooltip-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (60) + "px")
   
         var chartSVG = svg
           .append("g")
@@ -2293,7 +2308,7 @@
                           })
                           .attr("x", 0)
                           .attr("y", 0)
-                          .attr("fill", "#FFFED6")
+                          .attr("fill", "#FFFD99")
                           .attr("transform", function(d) {
                             if (radial === "maturity") {
                               var x = d.x;
@@ -2563,13 +2578,14 @@
                 .domain([1,max_country])
                 .range([2.6, 30]);
 
-              var countryColorScale = d3.scaleSequential(d3["interpolateCool"])
-                .domain([max_country,1])
+              var countryColorScale = d3.scaleThreshold()
+                .domain([1,max_country/3,max_country/2])
+                .range(["#000000", "#FCD757", "#FAA916","#AC3931"])
 
               d3.select(".map-legend").style("top", (window.innerHeight - 130) + "px")
                 d3.select(".legend-2").style("background-color", countryColorScale(1))
-                d3.select(".legend-1").style("background-color", countryColorScale(max_country/2))
-                d3.select(".legend-0").style("background-color", countryColorScale(max_country))
+                d3.select(".legend-1").style("background-color", countryColorScale(max_country/3))
+                d3.select(".legend-0").style("background-color", countryColorScale(max_country/2))
   
  
               json.features = json.features.filter(function(d) {
@@ -2890,7 +2906,7 @@
               .domain(fundingCategoryDomain)
               .range(fundingCategoryRange);
   
-            var colors = ["#E89BA0", "#99DDFF", "#A9DBBE"];
+            var colors = ["#E17A81", "#5CC9FF", "#6FC392"];
   
             var nodeColorScale = d3
               .scaleOrdinal()
@@ -3557,7 +3573,7 @@
               .classed("key-item-other", true)
               .attr("width", 8.8)
               .attr("height", 8.8)
-              .attr("fill", "#FFFED6")
+              .attr("fill", "#FFFD99")
               .attr("x", -4)
               .attr("y", 3)
               .attr("transform", "translate(0, -7) rotate(45)")
@@ -4279,7 +4295,7 @@
               })
               .attr("x", 0)
               .attr("y", 0)
-              .attr("fill", "#FFFED6")
+              .attr("fill", "#FFFD99")
               .attr("transform", function(d) {
                 return "translate(" + d.yearX + "," + d.yearY + ")    rotate(45)";
               })
@@ -5502,9 +5518,7 @@
             }
   
             function labelMouseOut() {
-              //d3.select("#label-mouse-over-text").remove();
-              //d3.select("#hover-svg-background").remove();
-               d3.select("#opp-space-tooltip-container").style("display", "none")
+               //d3.select("#opp-space-tooltip-container").style("display", "none")
               segmentsLabelBand.attr("opacity", function(d) {
                 return d.opacity;
               });
@@ -5645,7 +5659,9 @@
                   var avgFunding = segmentFunding / numberOfStartups;
                 }
               d3.select("#opp-space-tooltip-container").style("display", "block")
-              d3.select(".opp-space-tooltip-title").text((segment_data.data.value.key).toUpperCase().replace(/_/g, "/"))
+              d3.select(".opp-space-tooltip-title").text((segment_data.data.value.key).toUpperCase().replace(/_/g, "/")).style("background-color", function() {
+                return colorScale(segment_data.data.value.key)
+              } )
               //d3.select("#ostt-1").text(segmentDesc)
               d3.select("#ostt-3").text(formatFunding(segmentFunding))
               d3.select("#ostt-5").text(numberOfStartups)
@@ -6175,7 +6191,7 @@
                     })
                     .attr("x", 0)
                     .attr("y", 0)
-                    .attr("fill", "#FFFED6")
+                    .attr("fill", "#FFFD99")
                     .attr("transform", function(d) {
                       if (radial === "maturity") {
                         var x = d.x;
