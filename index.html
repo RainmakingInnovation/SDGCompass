@@ -1153,7 +1153,7 @@
     background: rgba(255, 255, 255, 1.0);
     text-align: left;
     text-anchor: start;
-    width: 200px;
+    width: 220px;
     font-size: 10px;
     border: 3px solid black;
   }
@@ -1163,8 +1163,14 @@
     padding: 10px;
     color: white;
     border-bottom: 3px solid black;
-    margin-bottom: 10px;
     height: 25px;
+  }
+
+  .opp-space-tooltip-desc {
+    font-family: "Graphik Regular";
+    padding: 10px;
+    height: 60px;
+    border-bottom: 3px solid black;
   }
 
   .opp-space-tooltip-sub-heading {
@@ -1178,6 +1184,10 @@
     font-family: "Graphik Bold";
     padding-bottom: 5px;
     margin-left: 10px;
+  }
+
+  .opp-space-tooltip-stats {
+    margin-top: 10px;
   }
 
   #ostt-1,
@@ -1208,6 +1218,16 @@
     height: 40px;
     background-color: black;
     opacity: 0.5;
+  }
+
+  .ostt-item {
+    display: inline-block;
+    height: 100%;
+    width: calc(32%);
+  }
+
+  .ostt-item-0 {
+    border-left: none;
   }
 
     </style>
@@ -1391,15 +1411,21 @@
   <div id="opp-space-tooltip-container">
       <div class="opp-space-tooltip">
       <div class="opp-space-tooltip-title"></div>
-      <div id="ostt-1" class="opp-space-tooltip-item"></div>
-      <div id="ostt-2" class="opp-space-tooltip-sub-heading">Total Funding:</div>
-      <div id="ostt-3" class="opp-space-tooltip-item"></div>
-      <div id="ostt-4" class="opp-space-tooltip-sub-heading">Total Number of Startups:</div>
-      <div id="ostt-5" class="opp-space-tooltip-item"></div>
-      <div id="ostt-6" class="opp-space-tooltip-sub-heading">Average Funding:</div>
-      <div id="ostt-7" class="opp-space-tooltip-item"></div>
-      <div id="ostt-8" class="opp-space-tooltip-item bold"></div>
-      <div id="ostt-9" class="opp-space-tooltip-item"></div>
+      <div class="opp-space-tooltip-desc"></div>
+      <div class="opp-space-tooltip-stats">
+        <div class="ostt-item ostt-item-0">
+            <div id="ostt-2" class="opp-space-tooltip-sub-heading">Total Funding:</div>
+            <div id="ostt-3" class="opp-space-tooltip-item"></div>
+        </div>
+        <div class="ostt-item">
+            <div id="ostt-4" class="opp-space-tooltip-sub-heading">Total Number of Startups:</div>
+            <div id="ostt-5" class="opp-space-tooltip-item"></div>
+        </div>
+        <div class="ostt-item">
+            <div id="ostt-6" class="opp-space-tooltip-sub-heading">Average Funding:</div>
+            <div id="ostt-7" class="opp-space-tooltip-item"></div>
+        </div>
+      </div>
     </div>
   </div>
     <div class="map-container">
@@ -1586,7 +1612,7 @@
           const svg_left = (d3.select("#chart-container").style("left"))
           d3.select("#key-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (window.innerHeight/2 - 60) + "px")
           d3.select("#control-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (window.innerHeight/2 + 80) + "px")
-          d3.select("#opp-space-tooltip-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (60) + "px")
+          d3.select("#opp-space-tooltip-container").style("left", (+svg_left.slice(0,-2) + svg_width + 160) + "px").style("top", ((window.innerHeight/2 - 60)) + "px")
   
         var chartSVG = svg
           .append("g")
@@ -1628,9 +1654,16 @@
         d3.csv(
           "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=0&single=true&output=csv"
         ).then(function(data) {
-          /*d3.csv(
-          "https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1462501778&single=true&output=csv"
-          ).then(function(desc) {*/
+          d3.csv(
+          "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=1309565139&single=true&output=csv"
+          ).then(function(desc) {
+            data.forEach(function(v) {
+              desc.forEach(function(w) {
+                if (w.SDG.toLowerCase() === v['Primary SDG'].toLowerCase()) {
+                  v.desc = w.Description
+                }
+              })
+            })
 
           var transform = d3.geoTransform({ point: projectPoint }),
             path = d3.geoPath().projection(transform);
@@ -5588,14 +5621,14 @@
             }
 
             function showOppSpaceTooltip(segment_data, clicked = "") {              
-              /*desc.forEach(function(v) {
+              desc.forEach(function(v) {
                 if (
                   segment_data.data.value.key ===
-                  v["Primary SDG"].toLowerCase().replace(/\//g, "_")
+                  v["SDG"].toLowerCase()
                 ) {
                   segmentDesc = v.Description;
                 }
-              });*/
+              });
             var count_by_focus_area = d3
               .nest()
               .key(function(d) {
@@ -5655,7 +5688,9 @@
               d3.select(".opp-space-tooltip-title").text((segment_data.data.value.key).toUpperCase().replace(/_/g, "/")).style("background-color", function() {
                 return colorScale(segment_data.data.value.key)
               } )
-              //d3.select("#ostt-1").text(segmentDesc)
+              console.log('segmentDesc', segmentDesc)
+              //desc
+              d3.select(".opp-space-tooltip-desc").text(segmentDesc)
               d3.select("#ostt-3").text(formatFunding(segmentFunding))
               d3.select("#ostt-5").text(numberOfStartups)
               d3.select("#ostt-7").text(formatFunding(avgFunding))
@@ -6446,7 +6481,7 @@
               }
             }
           //});
-          //});
+          });
         })
         });
   
