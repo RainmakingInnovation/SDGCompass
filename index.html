@@ -1201,6 +1201,7 @@
     left: 156px;
     z-index: 10000;
     border: 2px solid #DCDCDC;
+    display: none;
   }
 
   .legend {
@@ -1448,6 +1449,8 @@
       </div>
       
     </div>
+    </div>
+    </div>
 
     <div id="tmp-container"></div>
 
@@ -1471,7 +1474,7 @@
           clientFilter = "All Startups",
           geoFilter = "All Startups",
           filters = {type: "All Startups", geotype: "All Startups"}
-          logoPath = "",
+          logoPath = "assets/logo2.png",
           titleLogoWidth = 80,
           titleLogoHeight = 50,
           hoverOn = 0;
@@ -1613,14 +1616,14 @@
         d3.select(".map-container").style("display", "none")
         d3.select(".map-tooltip").style("display", "none")
 
-        /*var chartLogo = chartSVG
+        var chartLogo = chartSVG
           .append("image")
           .attr("xlink:href", logoPath)
           .attr("width", titleLogoWidth)
           .attr("height", titleLogoHeight)
           .attr("y", -titleLogoHeight / 2)
           .attr("x", -titleLogoWidth / 2)
-          .style("display", "none")*/
+          .style("display", "none")
   
         d3.csv(
           "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=0&single=true&output=csv"
@@ -1663,9 +1666,9 @@
               //d3.select(".dropdown-client").style("display", "inline-block")
               d3.select("#save-button").style("display", "block")
               d3.select(".chart-title").style("display", "")
-              //chartLogo.style("display", "block")
+              chartLogo.style("display", "block")
 
-              d3.json("assets/world_countries.json").then(function(json) {
+              d3.json("assets/countries.geo.json").then(function(json) {
 
                 //d3.csv("assets/worldcities.csv").then(function(cityData) {
 
@@ -1795,9 +1798,11 @@
 
               callback(null);
             }*/
+
+            console.log('json', json)
             
-              json.features.push({"type": "features", "properties": {"name": "Singapore"}, "geometry": {"type": "Polygon", "coordinates": [[0, 0]]}})
-              json.features.push({"type": "features", "properties": {"name": "Bahrain"}, "geometry": {"type": "Polygon", "coordinates": [[0, 0]]}})
+              //json.features.push({"type": "features", "properties": {"name": "Singapore"}, "geometry": {"type": "Polygon", "coordinates": [[0, 0],[1, 0],[0, 0],[0, 0]]}})
+              //json.features.push({"type": "features", "properties": {"name": "Bahrain"}, "geometry": {"type": "Polygon", "coordinates": [[0, 0]]}})
   
               d3.select("#radar-toggle-btn").on("click", function() {
                 d3.select("#map-toggle-btn").attr("class", "left-sidebar-btn")
@@ -1924,7 +1929,7 @@
   
                 startup_list = [];
                 data.forEach(function(w) {
-                  if (w.Country === d.properties.name) {
+                  if (w.Country === d.properties.name || (w["Country"] === "USA" && d.properties.name === "United States of America")) {
                     var obj = {
                       "Startup": w["Startup Name"],
                       Funding: w["Funding amount ($)"],
@@ -1995,52 +2000,52 @@
                           .attr("height", tmp_height);
 
                           if (i === 0) {
-                            var hor = tmp_width - 170
-                            var ver = tmp_height + 45;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 1) {
-                            var hor = tmp_width - 290;
-                            var ver = tmp_height + 20;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 2) {
-                            var hor = tmp_width - 340;
-                            var ver = tmp_height - 20;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 3) {
-                            var hor = tmp_width - 335;
-                            var ver = tmp_height - 170;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 4) {
-                            var hor = tmp_width - 290;
-                            var ver = tmp_height - 290;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 5) {
-                            var hor = tmp_width - 180;
-                            var ver = tmp_height - 330;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 6) {
-                            var hor = tmp_width - 15;
-                            var ver = tmp_height - 330;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 7) {
-                            var hor = tmp_width + 20;
-                            var ver = tmp_height - 290;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 8) {
-                            var hor = tmp_width + 40;
-                            var ver = tmp_height - 180;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 9) {
-                         var hor = tmp_width + 40;
-                            var ver = tmp_height - 10;
+                         var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 10) {
-                            var hor = tmp_width + 25;
-                            var ver = tmp_height + 25;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
                           if (i === 11) {
-                            var hor = tmp_width - 15;
-                            var ver = tmp_height + 45;
+                            var hor = tmp_width
+                            var ver = tmp_height
                           }
 
                           var tmp_chartSVG = tmp_svg
@@ -2523,28 +2528,7 @@
               var mapG = d3.select("#map").select("svg").append("g");
               mapG.attr("class", "leaflet-zoom-hide");
   
-  
-              data_country = d3
-                .nest()
-                .key(function(d) {
-                  return d.Country;
-                })
-                .entries(data);
-  
-              json_country = d3
-                .nest()
-                .key(function(d) {
-                  return d.properties.name;
-                })
-                .entries(json.features);
 
-              data.forEach(function(v) {
-                json.features.forEach(function(w) {
-                  if (v["Country"] === w.properties.name) {
-                    v.json_country = w.properties.name;
-                  }
-                });
-              });
   
               /*var countries = leftG
                 .selectAll(".country")
@@ -2557,18 +2541,25 @@
                   return "country_" + d.properties.name.replace(/ /g, "-");
                 })
                 .attr("fill", "#EFEFEF");*/
-  
-              json.features.forEach(function(w) {
+              var test = d3.nest()
+                .key(function(v) {
+                  return v.Country
+                })
+                .entries(data)
+
+                console.log(test)
+
+              json.forEach(function(w) {
                 w.properties.startups = 0;
                 data.forEach(function(v) {
-                  if (v["Country"] === w.properties.name) {
+                  if (v["Country"] === w.properties.name || (v["Country"] === "USA" && w.properties.name === "United States of America")) {
                     v.json_country = w.properties.name;
                     w.properties.startups += 1;
                   }
                 });
               });
   
-              var max_country = d3.max(json.features, function(w) {
+              var max_country = d3.max(json, function(w) {
                   return w.properties.startups
               })
 
@@ -2579,8 +2570,8 @@
                 .range([2.6, 30]);
 
               var countryColorScale = d3.scaleThreshold()
-                .domain([1,max_country/3,max_country/2])
-                .range(["#000000", "#FCD757", "#FAA916","#AC3931"])
+                .domain([1])
+                .range(["#4CA247", "#4CA247"])
 
               d3.select(".map-legend").style("top", (window.innerHeight - 130) + "px")
                 d3.select(".legend-2").style("background-color", countryColorScale(1))
@@ -2588,9 +2579,9 @@
                 d3.select(".legend-0").style("background-color", countryColorScale(max_country/2))
   
  
-              json.features = json.features.filter(function(d) {
+              /*json.features = json.features.filter(function(d) {
                 return d.geometry.coordinates[0].length > 2
-              })
+              })*/
 
               /*q.awaitAll(function (error) {
                 if (error) throw error;
@@ -2633,11 +2624,9 @@
                 }, 2000);
                 });*/
 
-
-
                 mapG
                 .selectAll(".country-circle")
-                .data(json.features)
+                .data(json)
                 .enter()
                 .append("circle")
                 .classed("country-circle", true)
@@ -2712,8 +2701,12 @@
                     return "hidden"
                   }
                 })*/
-                .attr("fill", "#7DCCFF")
-                .attr("stroke", "#7DCCFF");
+                .attr("fill", function(d) {
+                  return d.properties.color;
+                })
+                .attr("stroke", function(d) {
+                  return d.properties.color;
+                });
 
                  /*mapG.selectAll(".city-circle")
                   .attr("cx", function(d, i) {
@@ -3395,7 +3388,7 @@
                   return textWrap(
                     d.data.value.key.toUpperCase().replace(/_/g," "),
                     d.percentage,
-                    limit
+                    50
                   );
                 })
                 .enter()
@@ -3434,7 +3427,7 @@
                 })
                 .attr("startOffset", "50%")
                 .text(function(d) {
-                  return d.data
+                  return d.text_data.slice(0,d.text_data.indexOf(":"))
                 });
   
             var labelRadius = outerRadius * 1.055;
@@ -5880,71 +5873,67 @@
                     d3
                       .select(selection)
                       .node()
-                      .getBoundingClientRect().width + 40;
+                      .getBoundingClientRect().width 
                   var tmp_height =
                     d3
                       .select(selection)
                       .node()
-                      .getBoundingClientRect().height + 40;
+                      .getBoundingClientRect().height
   
                   var tmp_svg = d3
                     .select("#tmp-container")
                     .append("svg")
-                    .attr("width", tmp_width)
-                    .attr("height", tmp_height);
-  
-                          if (i === 0) {
-                            var hor = tmp_width - 170
-                            var ver = tmp_height + 45;
-                          }
-                          if (i === 1) {
-                            var hor = tmp_width - 290;
-                            var ver = tmp_height + 20;
-                          }
-                          if (i === 2) {
-                            var hor = tmp_width - 340;
-                            var ver = tmp_height - 20;
-                          }
-                          if (i === 3) {
-                            var hor = tmp_width - 335;
-                            var ver = tmp_height - 170;
-                          }
-                          if (i === 4) {
-                            var hor = tmp_width - 290;
-                            var ver = tmp_height - 290;
-                          }
-                          if (i === 5) {
-                            var hor = tmp_width - 180;
-                            var ver = tmp_height - 330;
-                          }
-                          if (i === 6) {
-                            var hor = tmp_width - 15;
-                            var ver = tmp_height - 330;
-                          }
-                          if (i === 7) {
-                            var hor = tmp_width + 20;
-                            var ver = tmp_height - 290;
-                          }
-                          if (i === 8) {
-                            var hor = tmp_width + 40;
-                            var ver = tmp_height - 180;
-                          }
-                          if (i === 9) {
-                         var hor = tmp_width + 40;
-                            var ver = tmp_height - 10;
-                          }
-                          if (i === 10) {
-                            var hor = tmp_width + 25;
-                            var ver = tmp_height + 25;
-                          }
-                          if (i === 11) {
-                            var hor = tmp_width - 15;
-                            var ver = tmp_height + 45;
-                          }
+                    .attr("width", width)
+                    .attr("height", height);
+
+                    var tmp_angle = (6.283/chartPieData.length)*(i+1)
+                    console.log('i', i)
+                    console.log('tmp_angle', tmp_angle)
+                    var adj = outerRadius * Math.cos(tmp_angle)
+                    var opp = outerRadius * Math.sin(tmp_angle)
+                    var adjR = (innerRadius+110) * Math.cos(tmp_angle)
+                    var oppR = (innerRadius+110) * Math.sin(tmp_angle)
+                    console.log('adj', adj)
+                    console.log('opp', opp)
+                    console.log('tmp_width', tmp_width)
+                    console.log('tmp_height', tmp_height)
+                    var quad = 3
+                    var hor = 0
+                    var ver = 50
+                    if (tmp_angle < 6.283/4) {
+                      quad = 1
+                    } else {
+                      if (tmp_angle < 6.283/2) {
+                        quad = 2
+                      } else {
+                        if (tmp_angle < 3*6.283/4) {
+                          console.log('q3')
+                        } else {
+                          console.log('q4')
+                        }
+                      }
+                    }
+                    if (quad === 1) {
+                      ver += tmp_height + Math.abs(adjR)
+                      
+                    } else {
+                      if (quad === 2) {
+                        console.log('v2')
+                        ver += Math.abs(adjR)
+                      } else {
+                        if (quad === 3) {
+
+                        } else {
+                          //ver = opp
+                        }
+                      }
+                    }
+
+                    console.log("transform", "translate(" +  hor + "," + ver + ")")
   
                   var tmp_chartSVG = tmp_svg
                     .append("g")
-                    .attr("transform", "translate(" + hor + "," + ver + ")");
+                    .attr("transform", "translate(" +  width/2 + "," + (height / 2 + 20) + ")");
   
                   if (radial === "maturity") {
                     var tmp_nascentSegments = tmp_chartSVG
@@ -6040,7 +6029,39 @@
                     .append("path")
                     .classed("segment-band", true)
                     .attr("d", segmentLabelBandArc)
-                    .attr("fill", "#7DCCFF")
+                    .attr("fill", function(d) {
+                      return colorScale(d.data.value.key)
+                    })
+              .each(function(d, i) {
+                var firstArcSection = /(^.+?)L/;
+                var newArc = firstArcSection.exec(d3.select(this).attr("d"))[1];
+                d.newArc = newArc.replace(/,/g, " ");
+                d.percentage =
+                  ((d.endAngle - d.startAngle) / 2 + d.startAngle) / 0.0628319;
+                if (d.percentage >= 100) {
+                  d.percentage -= 100;
+                }
+                if (d.percentage >= 25 && d.percentage <= 75) {
+                  var startLoc = /M(.*?)A/;
+                  var middleLoc = /A(.*?)0 0 1/;
+                  var endLoc = /0 0 1 (.*?)$/;
+                  d.newStart = endLoc.exec(d.newArc)[1];
+                  d.newEnd = startLoc.exec(d.newArc)[1];
+                  d.middleSec = middleLoc.exec(d.newArc)[1];
+                  d.newArc =
+                    "M" + d.newStart + "A" + d.middleSec + "0 0 0 " + d.newEnd;
+                }
+                d.hiddenArc = tmp_chartSVG
+                  .append("path")
+                  .attr("class", "hiddenDonutArcs")
+                  .attr("id", function() {
+                    return (
+                      "hidden-tmp-opp-space-band-" + d.data.value.key.replace(/ /g,"-").replace(/:/g,"")
+                    );
+                  })
+                  .attr("d", d.newArc)
+                  .style("fill", "none");
+              })
   
                   var tmpLabels = tmp_chartSVG
                     .append("g")
@@ -6079,7 +6100,7 @@
                         " 0 1,1 -0.01 0"
                     );
   
-                  tmpLabels
+                  /*tmpLabels
                     .selectAll("text")
                     .data([chartPieData[i]])
                     .enter()
@@ -6118,7 +6139,60 @@
                       } else {
                         return result[1];
                       }
-                    });
+                    });*/
+                var tmpOppSpaceLabels = tmp_chartSVG
+                .selectAll(".opp-space-label-text")
+                .data([chartPieData[i]])
+                .enter()
+                .append("g")
+                .selectAll(".test-class")
+                .data(function(d) {
+                  var limit = labelFontData.limit;
+
+                  return textWrap(
+                    d.data.value.key.toUpperCase().replace(/_/g," "),
+                    d.percentage,
+                    50
+                  );
+                })
+                .enter()
+                .append("text")
+                .attr("class", "label opp-space-label-text")
+                .attr("dy", function(d, i) {
+                  if (d.percentage >= 25 && d.percentage <= 75) {
+                    if (d.lineLength === 1) {
+                      return "-1.1em";
+                    } else {
+                      if (i === 0) {
+                        return "-1.6em";
+                      } else {
+                        return "-0.6em";
+                      }
+                    }
+                  } else {
+                    if (d.lineLength === 1) {
+                      return "1.8em";
+                    } else {
+                      if (i === 0) {
+                        return "1.3em";
+                      } else {
+                        return "2.3em";
+                      }
+                    }
+                  }
+                })
+                .append("textPath")
+                .attr("xlink:href", function(d, i) {
+                  return (
+                    "#" +
+                    "hidden-tmp-opp-space-band-" +
+                    d.text_data.toLowerCase().replace(/ /g,"-").replace(/:/g,"")
+                  );
+                })
+                .attr("startOffset", "50%")
+                .text(function(d) {
+                  return d.text_data.slice(0,d.text_data.indexOf(":"))
+                });
   
                   var tmp_nodes = tmp_chartSVG
                     .selectAll("nodes")
@@ -6218,8 +6292,8 @@
   
                   svgString2Image(
                     svgString,
-                    tmp_width * 2,
-                    tmp_height * 2,
+                    width * 2,
+                    height * 2,
                     "png",
                     name,
                     save
