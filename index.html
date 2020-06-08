@@ -5897,7 +5897,8 @@
               });
             }
             function save_split() {
-              for (let i = 0; i < chartPieData.length; i++) {
+              //for (let i = 0; i < chartPieData.length; i++) {
+                for (let i = 0; i < chartPieData.length; i++) {
                 setTimeout(function() {
                   var selection =
                     "#background-segment-" +
@@ -5918,8 +5919,15 @@
                   var tmp_svg = d3
                     .select("#tmp-container")
                     .append("svg")
-                    .attr("width", width)
-                    .attr("height", height);
+                    .attr("width", width/2)
+                    .attr("height", height/2);
+
+                    var clientRect =
+                    d3
+                      .select(selection)
+                      .node()
+                      .getBoundingClientRect()
+
 
                     var tmp_angle = (6.283/chartPieData.length)*(i+1)
                     console.log('i', i)
@@ -5930,36 +5938,26 @@
                     var oppR = (innerRadius+110) * Math.sin(tmp_angle)
                     console.log('adj', adj)
                     console.log('opp', opp)
-                    console.log('tmp_width', tmp_width)
-                    console.log('tmp_height', tmp_height)
                     var quad = 3
                     var hor = 0
                     var ver = 50
                     if (tmp_angle < 6.283/4) {
                       quad = 1
+                      hor += Math.abs(Math.sin(tmp_angle+6.283/4)*width/8)
+                      ver = height/2
                     } else {
                       if (tmp_angle < 6.283/2) {
                         quad = 2
+                        hor += Math.abs(Math.sin(tmp_angle+6.283/4)*width/8)
                       } else {
                         if (tmp_angle < 3*6.283/4) {
-                          console.log('q3')
+                          hor = width/2
+                          hor-= Math.abs(Math.sin(tmp_angle+6.283/4)*width/8)
                         } else {
-                          console.log('q4')
-                        }
-                      }
-                    }
-                    if (quad === 1) {
-                      ver += tmp_height + Math.abs(adjR)
-                      
-                    } else {
-                      if (quad === 2) {
-                        console.log('v2')
-                        ver += Math.abs(adjR)
-                      } else {
-                        if (quad === 3) {
-
-                        } else {
-                          //ver = opp
+                          hor = width/2
+                          hor-= Math.abs(Math.sin(tmp_angle+6.283/4)*width/8)
+                          ver = height/2
+                          ver-= Math.abs(Math.sin(tmp_angle)*width/4)
                         }
                       }
                     }
@@ -5968,7 +5966,7 @@
   
                   var tmp_chartSVG = tmp_svg
                     .append("g")
-                    .attr("transform", "translate(" +  width/2 + "," + (height / 2 + 20) + ")");
+                    .attr("transform", "translate(" +  hor + "," + ver + ")");
   
                   if (radial === "maturity") {
                     var tmp_nascentSegments = tmp_chartSVG
@@ -6327,8 +6325,8 @@
   
                   svgString2Image(
                     svgString,
-                    width * 2,
-                    height * 2,
+                    (width/2) * 2,
+                    (height/2) * 2,
                     "png",
                     name,
                     save
