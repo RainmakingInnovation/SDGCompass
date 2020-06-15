@@ -1608,10 +1608,12 @@
 
           
 
-          d3.select("#chart-container").style("left", (146 + (window.innerWidth - (180+200)-svg_width)/2) + "px")
+          //d3.select("#chart-container").style("left", (146 + (window.innerWidth - (180+200)-svg_width)/2) + "px")
+          d3.select("#chart-container").style("left", (146) + "px")
+
           const svg_left = (d3.select("#chart-container").style("left"))
-          d3.select("#key-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (window.innerHeight/2 - 60) + "px")
-          d3.select("#control-container").style("left", (+svg_left.slice(0,-2) + svg_width) + "px").style("top", (window.innerHeight/2 + 80) + "px")
+          d3.select("#key-container").style("left", (+svg_left.slice(0,-2)-20 + svg_width) + "px").style("top", (window.innerHeight/2 - 60) + "px")
+          d3.select("#control-container").style("left", (+svg_left.slice(0,-2)-20 + svg_width) + "px").style("top", (window.innerHeight/2 + 80) + "px")
           d3.select("#opp-space-tooltip-container").style("left", (+svg_left.slice(0,-2) + svg_width + 160) + "px").style("top", ((window.innerHeight/2 - 60)) + "px")
   
         var chartSVG = svg
