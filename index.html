@@ -1654,10 +1654,10 @@
           .style("display", "none")
   
         d3.csv(
-          "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=0&single=true&output=csv"
+          "https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=0&single=true&output=csv"
         ).then(function(data) {
           d3.csv(
-          "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=1309565139&single=true&output=csv"
+          "https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vQwCsO-wadJhd2NnBHjzdEV-sHNGlNsbaiWujn_lQ3blZpUTryeAlksFPrDNBbPZAxZHBNV2yraawVY/pub?gid=1309565139&single=true&output=csv"
           ).then(function(desc) {
             data.forEach(function(v) {
               desc.forEach(function(w) {
